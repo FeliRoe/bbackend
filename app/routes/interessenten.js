@@ -3,7 +3,7 @@ const router = require('express').Router();
 
 router
   .get('/', execute.holalles) 
-  .get('/:ObjektID', execute.getNumber) 
+  .get('/:inseratId', execute.getNumber) 
   .post('/', execute.intressezeigen)  
 
 module.exports = router;
