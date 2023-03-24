@@ -12,7 +12,6 @@ return res.status(500).json(error);
 
 exports.intressezeigen = async (req, res, next) => {
 const INTERESSENT = {
-BenutzerID: req.body.BenutzerID,
 ObjektID: req.body.ObjektID
 };
 

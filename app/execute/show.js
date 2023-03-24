@@ -101,6 +101,8 @@ const { Op } = require("sequelize");
       (error) => res.status(500).json(error)
       );
       };
+
+      //hier sollte es eine Funktion geben, welche sicherstellt, dass bei 3 Interessenten das Objekt nicht mehr zu löschen ist. 
       
       exports.loeschen = async (req, res, next) => {
       Anzeige.destroy({ where: { id: req.params.id } }).then(
@@ -108,3 +110,16 @@ const { Op } = require("sequelize");
       (error) => res.status(500).json(error)
       );
       };
+
+      exports.deleteOne = async (req, res, next) => {  try {    
+        const id = req.params.id;    const inserate = await Inserat.findByPk(id);    
+        if (!inserate) {      
+            return res.status(404).json(
+            { error: 'Inserate not found' });    }     
+      const numOfInteressenten = await Interessenten.count({ where: { inseratId: req.params.id } });    
+      if (numOfInteressenten >= 3) {        
+        return res.status(400).json({ error: 'Dieses Inserat hat bereits 3 oder mehr Interessenten, es kann nicht gelöscht werden !!!' }); 
+        
+        //Aufgabe 3    
+    }    
+        await inserate.destroy();    return res.status(200).json({ message: 'Inserate deleted' });  } catch (error) {    return res.status(500).json(error);  }};
