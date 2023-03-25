@@ -10,5 +10,8 @@ const hochladen = multer({storage: speicher})
 router.get('/all', execute.getBilder);
 router.delete('/:id', execute.deleteBild);
 router.post('/', hochladen.single('image'), execute.uploadBild);
+router.get('/:id', execute.getBildById);
+
+
 
 module.exports = router;

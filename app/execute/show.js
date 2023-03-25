@@ -1,7 +1,6 @@
 const Anzeige = require('../datenstruktur/show');
 const { Op } = require("sequelize");
-
-//Aufgabe: Bei mehr als 3 Interessenten, nicht löschbar (siehe Aufgabenstellung)
+const Interessenten = require('../datenstruktur/interessenten');
 
 
     exports.erstelleInserat = async (req, res, next) => {
@@ -50,6 +49,7 @@ const { Op } = require("sequelize");
             .catch(error => {
                 res.status(500).json({ message: "Internal server error", error });
             });
+
     };
     
     exports.bauplaetze = async (req, res, next) => {
@@ -111,15 +111,28 @@ const { Op } = require("sequelize");
       );
       };
 
-      exports.deleteOne = async (req, res, next) => {  try {    
-        const id = req.params.id;    const inserate = await Inserat.findByPk(id);    
-        if (!inserate) {      
-            return res.status(404).json(
-            { error: 'Inserate not found' });    }     
-      const numOfInteressenten = await Interessenten.count({ where: { inseratId: req.params.id } });    
-      if (numOfInteressenten >= 3) {        
-        return res.status(400).json({ error: 'Dieses Inserat hat bereits 3 oder mehr Interessenten, es kann nicht gelöscht werden !!!' }); 
-        
-        //Aufgabe 3    
-    }    
-        await inserate.destroy();    return res.status(200).json({ message: 'Inserate deleted' });  } catch (error) {    return res.status(500).json(error);  }};
+      //Aufgabe: Bei mehr als 3 Interessenten, nicht löschbar
+      //läuft nicht ohne Relationen
+      
+      exports.deleteOne = async (req, res, next) => {
+        try {
+          const id = req.params.id;
+          const inserate = await Anzeige.findByPk(id);
+      
+          if (!inserate) {
+            return res.status(404).json({ error: 'Inserate not found' });
+          }
+      
+          const numOfInteressenten = await Interessenten.count({ where: { ObjektID: req.params.id } });
+      
+          if (numOfInteressenten >= 3) {
+            return res.status(400).send('Interessent kann nicht gelöscht werden, weil mehr als 3 Interessenten eingetragen wurden.');
+          }
+      
+          await inserate.destroy();
+          return res.status(200).json({ message: 'Inserate deleted' });
+        } catch (error) {
+          return res.status(500).json(error);
+        }
+      };
+      

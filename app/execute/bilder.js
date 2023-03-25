@@ -1,5 +1,6 @@
 const { Sequelize } = require('sequelize');
-const {bilder} = require('../datenstruktur/bilder');
+const bilder = require('../datenstruktur/bilder');
+
 
 exports.uploadBild = async (req, res) => {
   try {
@@ -33,6 +34,21 @@ exports.getBilder = async (req, res) => {
   try {
     const bild = await bilder.findAll();
     res.status(200).json(bild);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+};
+
+exports.getBildById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const bild = await bilder.findByPk(id);
+    if (bild) {
+      res.set('Content-Type', 'image/jpeg');
+      res.send(bild.image);
+    } else {
+      res.status(404).send('Bild nicht gefunden');
+    }
   } catch (e) {
     res.status(500).send(e);
   }

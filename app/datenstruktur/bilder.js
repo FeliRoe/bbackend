@@ -1,5 +1,5 @@
+const { DataTypes } = require('sequelize');
 const database = require('../util/database');
-const DataTypes = require('sequelize');
 
 const bilder = database.define('Photo', {
   id: {
