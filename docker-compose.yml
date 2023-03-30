@@ -3,7 +3,7 @@ version: '3.8'
 services: 
   datenbank:
     container_name: datenbank
-    image: feli:0.0.209
+    image: feli:0.0.210
     build: 
       context: .
     ports:
